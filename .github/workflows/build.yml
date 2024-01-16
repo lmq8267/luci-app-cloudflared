@@ -22,7 +22,7 @@ jobs:
       - name: 开始编译
         run: |
           cd /opt/openwrt-sdk*
-          make package/luci-app-cloudlfared/compile V=s -j1
+          make package/luci-app-cloudflared/compile V=s -j1
           cd /opt/openwrt-sdk*/bin/packages/aarch64_generic/base
           ls
           #mv *.ipk luci-app-cloudflared_all.ipk
