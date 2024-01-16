@@ -1,0 +1,44 @@
+module("luci.controller.cloudflared",package.seeall)
+
+function index()
+  if not nixio.fs.access("/etc/config/cloudflared")then
+return
+end
+
+entry({"admin","vpn"}, firstchild(), "VPN", 49).dependent = false
+
+entry({"admin", "vpn", "cloudflared"},firstchild(), _("Cloudflared")).dependent = false
+
+entry({"admin", "vpn", "cloudflared", "general"},cbi("cloudflared/settings"), _("配置"), 1)
+entry({"admin", "vpn", "cloudflared", "log"},form("cloudflared/info"), _("日志"), 2)
+
+entry({"admin","vpn","cloudflared","status"},call("act_status"))
+end
+
+function act_status()
+local e={}
+  e.running=luci.sys.call("pidof cloudflared0 >/dev/null")==0
+  
+  local command = io.popen("[ -f /tmp/cloudflared_time ] && start_time=$(cat /tmp/cloudflared_time) && time=$(($(date +%s)-start_time)) && day=$((time/86400)) && [ $day -eq 0 ] && day='' || day=${day}天 && time=$(date -u -d @${time} +'%H小时%M分%S秒') && echo $day $time")
+  e.cfsta = command:read("*all")
+  command:close()
+  
+  local command2 = io.popen('test ! -z "`pidof cloudflared0`" && (top -b -n1 | grep -E "$(pidof cloudflared0)" 2>/dev/null | grep -v grep | awk \'{for (i=1;i<=NF;i++) {if ($i ~ /cloudflared0/) break; else cpu=i}} END {print $cpu}\')')
+  e.cfcpu = command2:read("*all")
+  command2:close()
+  
+  local command3 = io.popen("test ! -z `pidof cloudflared0` && (cat /proc/$(pidof cloudflared0 | awk '{print $NF}')/status | grep -w VmRSS | awk '{printf \"%.2f MB\", $2/1024}')")
+  e.cfram = command3:read("*all")
+  command3:close()
+  
+  local command4 = io.popen("([ -s /tmp/cloudflared.tag ] && cat /tmp/cloudflared.tag ) || (echo `$(uci -q get cloudflared.@cloudflared[0].cfbin) version | awk '{print $3}'` > /tmp/cloudflared.tag && cat /tmp/cloudflared.tag)")
+  e.cftag = command4:read("*all")
+  command4:close()
+  
+  local command5 = io.popen("([ -s /tmp/cloudflarednew.tag ] && cat /tmp/cloudflarednew.tag ) || ( curl -L -k -s --connect-timeout 3 --user-agent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36' https://api.github.com/repos/cloudflare/cloudflared/releases/latest | grep tag_name | sed 's/[^0-9.]*//g' >/tmp/cloudflarednew.tag && cat /tmp/cloudflarednew.tag )")
+  e.cfnewtag = command5:read("*all")
+  command5:close()
+  
+  luci.http.prepare_content("application/json")
+  luci.http.write_json(e)
+end
