@@ -26,7 +26,7 @@ e.placeholder = "eyJhIjoiMzQ3NTNhNDBlZTg4NTYzMDU5YmUzN2U2ZDY4YjEzY2QiLCJ0IjoiNTJ
 e:depends("cmdenabled", 0)
 
 custom_cmd = t:option(DynamicList, "custom_cmd", translate("自定义启动参数"),
-                       translate("这里不需要再加程序路径，只需要正常添加启动参数即可，详细的命令启动参数：<a href='https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-run-parameters/' target='_blank'>cloudflared文档</a>br>注意:每个参数必须单独添加,如添加第一个参数tunnel 第二个参数--no-autoupdate 第三个参数--logfile /tmp/cloudflared.info 第四个参数run <br>一个框内不能添加两个参数,多个参数点+多个框即可<br>如需输出日志路径请设置 --logfile /tmp/cloudflared.info<"))
+                       translate("这里不需要再加程序路径，只需要正常添加启动参数即可，详细的命令启动参数：<a href='https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-run-parameters/' target='_blank'>cloudflared文档</a><br>注意:每个参数必须单独添加,如添加第一个参数tunnel 第二个参数--no-autoupdate 第三个参数--logfile /tmp/cloudflared.info 第四个参数run <br>一个框内不能添加两个参数,多个参数点+多个框即可<br>如需输出日志路径请设置 --logfile /tmp/cloudflared.info"))
 custom_cmd.placeholder = "--logfile /tmp/cloudflared.info"
 custom_cmd:depends("cmdenabled", 1)
 
