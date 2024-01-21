@@ -18,19 +18,23 @@ end
 function act_status()
 local e={}
   e.running=luci.sys.call("pidof cloudflared0 >/dev/null")==0
-  local tagfile = io.open("/tmp/cloudflared_time", "r")
-   if tagfile then
-   local tagcontent = tagfile:read("*all")
-   tagfile:close()
-  if tagcontent and tagcontent ~= "" and luci.fs.stat("/tmp/cloudflared_time") then
-  local command = io.popen("[ -f /tmp/cloudflared_time ] && start_time=$(cat /tmp/cloudflared_time) && time=$(($(date +%s)-start_time)) && day=$((time/86400)) && [ $day -eq 0 ] && day='' || day=${day}天 && time=$(date -u -d @${time} +'%H小时%M分%S秒') && echo $day $time")
-  e.cfsta = command:read("*all")
-  command:close()
-  if e.cfsta == "" then
-  e.cfsta = "Unknown"
-  end
-  end
-  end
+
+local tagfile = io.open("/tmp/cloudflared_time", "r")
+        if tagfile then
+	local tagcontent = tagfile:read("*all")
+	tagfile:close()
+	if tagcontent and tagcontent ~= "" then
+        os.execute("start_time=$(cat /tmp/cloudflared_time) && time=$(($(date +%s)-start_time)) && day=$((time/86400)) && [ $day -eq 0 ] && day='' || day=${day}天 && time=$(date -u -d @${time} +'%H小时%M分%S秒') && echo $day $time > /tmp/command_cloudflared 2>&1")
+        local command_output_file = io.open("/tmp/command_cloudflared", "r")
+        if command_output_file then
+            e.cfsta = command_output_file:read("*all")
+            command_output_file:close()
+	          if e.cfsta == "" then
+               e.cfsta = "unknown"
+            end
+        end
+	end
+	end
   
   local command2 = io.popen('test ! -z "`pidof cloudflared0`" && (top -b -n1 | grep -E "$(pidof cloudflared0)" 2>/dev/null | grep -v grep | awk \'{for (i=1;i<=NF;i++) {if ($i ~ /cloudflared0/) break; else cpu=i}} END {print $cpu}\')')
   e.cfcpu = command2:read("*all")
