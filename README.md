@@ -13,3 +13,6 @@
 自定义参数启动
 
 ![](./Image/自定义参数启动.png)
+
+English
+![](./Image/英文版.png)
