@@ -16,6 +16,7 @@ jobs:
           git clone https://github.com/lmq8267/luci-app-cloudflared.git /opt/cf
           cd /opt/openwrt-sdk*/package
           cp -R /opt/cf/luci-app-cloudflared .
+          cp -R /opt/cf/luci-app-cloudflared_En .
           cd /opt/openwrt-sdk*
           ./scripts/feeds update -a
           make defconfig
@@ -23,6 +24,7 @@ jobs:
         run: |
           cd /opt/openwrt-sdk*
           make package/luci-app-cloudflared/compile V=s -j1
+          make package/luci-app-cloudflared_En/compile V=s -j1
           cd /opt/openwrt-sdk*/bin/packages/aarch64_generic/base
           ls
           #mv *.ipk luci-app-cloudflared_all.ipk
@@ -35,7 +37,9 @@ jobs:
             body: |
              > ### 编译时间 ：${{ env.build_time }}
 
-           
+             English：luci-app-cloudflared_En_1.0_all.ipk
+             中文版：luci-app-cloudflared_1.0_all.ipk
+             
             tag_name: ${{ env.tag }}
             files: /opt/openwrt-sdk*/bin/packages/aarch64_generic/base/*
      
