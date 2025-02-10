@@ -28,14 +28,14 @@ jobs:
           cd /opt/openwrt-sdk*/bin/packages/aarch64_generic/base
           ls
           #mv *.ipk luci-app-cloudflared_all.ipk
-          echo "build_time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          echo "build_time=$(date '+%Y年%m月%d日%H:%M:%S' | jq -sRr @uri)" >> $GITHUB_ENV
           echo "tag=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
       - name: 发布
         uses: softprops/action-gh-release@v1
         with:
             token: ${{ secrets.c8 }}
             body: |
-             > ### 编译时间 ：${{ env.build_time }}
+             > ### ![](https://img.shields.io/badge/%E7%BC%96%E8%AF%91%E6%97%B6%E9%97%B4-${{ env.build_time }}-8267?logo=github&labelColor=%E9%A1%BB)![](https://img.shields.io/github/downloads/lmq8267/luci-app-cloudflared/${{ env.tag }}/total?label=%E4%B8%8B%E8%BD%BD%E6%AC%A1%E6%95%B0&logo=github)
 
              English：luci-app-cloudflared_En_1.0_all.ipk
              中文版：luci-app-cloudflared_1.0_all.ipk
