@@ -26,7 +26,7 @@ start_instance() {
 	 PROG="/tmp/cloudflared0"
 	fi
 	
-	if [ $(($($PROG help | wc -l))) -lt 3 ] ;then
+	if [[ "$($PROG -h 2>&1 | wc -l)" -lt 3 ]] ;then
 	  uci -q set cloudflared.@cloudflared[0].enabled=0 
 	  uci commit cloudflared 
 	  echo "$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X) : $PROG 程序不完整或CPU架构不支持的程序，无法启动!" >>/tmp/cloudflared.info 
