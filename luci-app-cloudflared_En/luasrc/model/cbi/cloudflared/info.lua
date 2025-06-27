@@ -6,15 +6,15 @@ local m = SimpleForm("logview", "")
 m.reset = false
 m.submit = false
 
--- 清空日志按钮
+-- Clear log button
 local clear_btn = m:field(Button, "_clear", "")
-clear_btn.inputtitle = "清空日志"
+clear_btn.inputtitle = "Clear log"
 clear_btn.inputstyle = "remove"
 function clear_btn.write()
 	fs.writefile(conffile, "")
 end
 
--- 日志内容框
+-- Log content box
 local log = m:field(TextValue, "logcontent", "")
 log.rows = 30
 log.readonly = true
@@ -40,7 +40,7 @@ function m.render(self, ...)
 end
 
 local refresh_btn = m:field(Button, "_refresh", "")
-refresh_btn.inputtitle = "刷新日志"
+refresh_btn.inputtitle = "Refresh log"
 refresh_btn.inputstyle = "apply"
 function refresh_btn.write()
 end
