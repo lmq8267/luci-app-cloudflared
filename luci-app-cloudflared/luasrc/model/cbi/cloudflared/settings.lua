@@ -41,6 +41,7 @@ custom_cmd:depends("cmdenabled", 1)
 
 loglevel = t:option(ListValue, "loglevel", translate("日志等级"),
 	translate("指定日志记录的详细程度。默认info级别不会产生太多输出，但您可能希望warn在生产中使用该级别。<br>等级由低到高：debug < info < warn < Error < Fatal"))
+loglevel:value("off")
 loglevel:value("info")
 loglevel:value("debug")
 loglevel:value("warn")
