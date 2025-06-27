@@ -58,8 +58,10 @@ start_instance() {
 	   fi
 	   procd_append_param command tunnel
 	   procd_append_param command --no-autoupdate
-	   procd_append_param command --logfile /tmp/cloudflared.info
-	   [ "$loglevel" != "off" ] && procd_append_param command --loglevel "$loglevel"
+	   if [ "$loglevel" != "off" ] ; then
+		procd_append_param command --logfile /tmp/cloudflared.info
+		procd_append_param command --loglevel "$loglevel"
+	   fi
 	   procd_append_param command run
 	   procd_append_param command --token "$token"
 	fi
