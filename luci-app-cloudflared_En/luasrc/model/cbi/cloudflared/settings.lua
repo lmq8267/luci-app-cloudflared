@@ -32,6 +32,7 @@ custom_cmd:depends("cmdenabled", 1)
 
 loglevel = t:option(ListValue, "loglevel", translate("Log level"),
 	translate("Specifies the verbosity of logging. The default info level doesn't produce much output, <br>but you may want to issue a warning when using this level in production.<br>Level from low to high：debug < info < warn < Error < Fatal"))
+loglevel:value("off")
 loglevel:value("info")
 loglevel:value("debug")
 loglevel:value("warn")
