@@ -26,7 +26,7 @@ start_instance() {
 	 PROG="/tmp/cloudflared0"
 	fi
 	
-	if [[ "$($PROG help 2>&1 | wc -l)" -lt 3 ]] ;then
+	if [ $(($($PROG help | wc -l))) -lt 3 ] ;then
 	  uci -q set cloudflared.@cloudflared[0].enabled=0 
 	  uci commit cloudflared 
 	  echo "$(date -R +%Y:%m:%d\ %X) : $PROG Programs that are incomplete or not supported by the CPU architecture cannot be started.!" >>/tmp/cloudflared.info 
